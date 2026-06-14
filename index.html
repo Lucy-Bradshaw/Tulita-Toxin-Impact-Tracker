@@ -191,7 +191,7 @@ tbody td:first-child{color:var(--text-2)}
   <div class="section impact-section">
     <div class="section-label">Impact summary — cumulative</div>
     <div class="metric-grid">
-      <div class="metric"><div class="label">Total customers reached</div><div class="value" id="s-total">—</div><div class="sub">All quarters combined</div></div>
+      <div class="metric"><div class="label">Total customers reached</div><div class="value" id="s-total">—</div><div class="sub">Latest quarter · cumulative</div></div>
       <div class="metric"><div class="label">Switchers · toxin-free</div><div class="value" id="s-switch">—</div><div class="sub">At survey switch rate</div></div>
       <div class="metric"><div class="label">Phthalate exposures eliminated</div><div class="value" id="s-exp">—</div><div class="sub">Per year · all switchers</div></div>
       <div class="metric"><div class="label">Progress to 2030 goal</div><div class="value" id="s-pct">—</div><div class="sub"><div class="pbar"><div class="pfill" id="s-bar" style="width:0%"></div></div><span id="s-remaining" style="display:block;margin-top:.4rem"></span></div></div>
@@ -350,10 +350,11 @@ function recalc(){
   const goal = Math.max(1, parseInt(document.getElementById('goalInput').value)||54000);
   const upd = Math.max(1, parseInt(document.getElementById('usePerDay').value)||2);
 
-  let cum=0; const labels=[],qVals=[],cumVals=[],switchVals=[];
-  entries.forEach(e=>{ cum+=e.cust; labels.push(e.year+' '+e.q); qVals.push(e.cust); cumVals.push(cum); switchVals.push(Math.round(e.cust*sp)); });
+  const labels=[],qVals=[],switchVals=[];
+  entries.forEach(e=>{ labels.push(e.year+' '+e.q); qVals.push(e.cust); switchVals.push(Math.round(e.cust*sp)); });
 
-  const totalCust=cum, totalSwitch=Math.round(cum*sp), totalExp=totalSwitch*upd*365;
+  const latest = entries.length ? entries[entries.length-1].cust : 0;
+  const totalCust=latest, totalSwitch=Math.round(latest*sp), totalExp=totalSwitch*upd*365;
   const goalPct=pctNum(totalCust,goal), remaining=Math.max(0,goal-totalCust);
 
   document.getElementById('s-total').textContent = totalCust?fmt(totalCust):'—';
